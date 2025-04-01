@@ -1,24 +1,20 @@
 pipeline {
     agent any
-
     stages {
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/your-username/httpd-deployment.git'
+                git credentialsId: 'github-credentials', url: 'https://github.com/a-dhanush-007/httpd-deployment.git', branch: 'main'
             }
         }
-
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t my-httpd-image .'
             }
         }
-
         stage('Deploy to Docker') {
             steps {
-                sh 'chmod +x deploy.sh && ./deploy.sh'
+                sh 'docker run -d -p 80:80 --name my-httpd-container my-httpd-image'
             }
         }
     }
 }
-
